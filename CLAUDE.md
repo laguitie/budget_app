@@ -16,7 +16,7 @@ El plan completo (alcance, modelo de datos, pantallas y fases) está en [docs/PL
 - `npm run dev`: servidor de desarrollo.
 - `npm run build`: chequeo de tipos y build de producción.
 - `npm run lint`: ESLint.
-- `npm run format`: Prettier.
+- `npm run format`: Prettier (`npm run format:check` solo verifica).
 - `npm test`: Vitest.
 
 ## Reglas del dominio
