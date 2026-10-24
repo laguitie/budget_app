@@ -2,7 +2,7 @@
 
 Budget App familiar: app de presupuesto compartida por hogar, web y móvil (PWA), en colones (₡) y dólares ($).
 
-El objetivo principal es reemplazar HomeBudget eliminando la digitación manual: un asistente de IA que convierte los comprobantes de compra que llegan por correo en gastos, concilia estados de cuenta en PDF y recibe instrucciones por voz (Siri) o desde agentes externos (MCP). Ver la sección 7 del plan.
+El objetivo principal es reemplazar HomeBudget eliminando la digitación manual: un asistente de IA que convierte los comprobantes de compra del BAC y del BNCR que llegan por correo (Hotmail) en gastos, concilia estados de cuenta en PDF y recibe instrucciones por voz (Siri) o desde agentes externos (MCP). Ver la sección 7 del plan.
 
 El plan completo (alcance, modelo de datos, pantallas y fases) está en [docs/PLAN.md](docs/PLAN.md). Léelo antes de empezar una tarea nueva y marca los issues completados ahí.
 

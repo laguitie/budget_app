@@ -62,7 +62,7 @@ Primera versión con lo indispensable para el uso diario:
 | CI | GitHub Actions | Lint, pruebas y build en cada pull request |
 | IA | API de Claude (Anthropic), llamada desde Edge Functions | Extraer gastos de correos y PDFs, interpretar instrucciones en lenguaje natural |
 | Agentes externos | Servidor MCP (Model Context Protocol) | Que Claude u otros asistentes de IA consulten y registren movimientos |
-| Correo entrante | Servicio de correo entrante con webhook (Postmark, Mailgun o Cloudflare Email Routing) | Recibir los comprobantes reenviados y pasarlos a una Edge Function |
+| Correo entrante | Servicio de correo entrante con webhook (Postmark para empezar, sin dominio propio) | Recibir los comprobantes reenviados y pasarlos a una Edge Function |
 
 ## 5. Diseño multimoneda
 
@@ -115,9 +115,12 @@ Primera versión con lo indispensable para el uso diario:
 
 ### 7.1 Gastos desde el correo
 
-- **Flujo:** un filtro de Gmail reenvía automáticamente los comprobantes del banco a una dirección propia del hogar (ej. `hogar-xxxx@entrada.dominio`). El servicio de correo entrante llama a una Edge Function, que guarda el mensaje, extrae los datos con Claude y crea el gasto pendiente.
-- **Alternativa:** leer el buzón con la API de Gmail. Evita configurar el reenvío, pero requiere permisos de lectura del correo y la verificación de Google para OAuth; queda como opción posterior.
-- Solo se aceptan remitentes de una lista permitida por hogar (los dominios de los bancos).
+- **Bancos iniciales:** BAC Credomatic y Banco Nacional (BNCR). Los comprobantes llegan a una cuenta de Hotmail (Outlook.com).
+- **Flujo:** una regla de Outlook.com reenvía automáticamente los comprobantes del BAC y del BNCR a la dirección de entrada del hogar. El servicio de correo entrante llama a una Edge Function, que guarda el mensaje, extrae los datos con Claude y crea el gasto pendiente.
+- **Dirección de entrada:** Postmark da una dirección de entrada propia sin necesidad de tener un dominio, por eso es la opción para empezar. Mailgun y Cloudflare Email Routing requieren un dominio propio.
+- **Plan B:** Outlook.com puede limitar el reenvío automático a direcciones externas. Si eso pasa, se lee el buzón con Microsoft Graph (permiso `Mail.Read` de una cuenta personal de Microsoft, con una suscripción que avisa cuando llega un correo nuevo). Requiere registrar una app en Microsoft Entra y un flujo OAuth, pero evita depender del reenvío.
+- **Formato de cada banco:** el BAC y el BNCR usan plantillas distintas, así que habrá casos de prueba por banco. Claude extrae los campos con un esquema fijo (fecha, comercio, monto, moneda, últimos dígitos, tipo de transacción) y el resultado se valida antes de crear el movimiento.
+- Solo se aceptan remitentes de una lista permitida por hogar (las direcciones de notificación del BAC y del BNCR).
 - La cuenta se identifica por los últimos 4 dígitos de la tarjeta que trae el comprobante (campo `ultimos_digitos` en `accounts`).
 - Se detectan duplicados (mismo monto, fecha y comercio) para no registrar dos veces el mismo gasto.
 
@@ -227,14 +230,15 @@ Pantallas del asistente (fases 7 a 9):
 - [ ] Pruebas con la familia y ajustes.
 
 ### Fase 7: Gastos desde el correo
-- [ ] Reunir comprobantes reales de cada banco/tarjeta (sin datos sensibles) como casos de prueba.
+- [ ] Reunir comprobantes reales del BAC y del BNCR (compras en colones y en dólares, anulaciones), anonimizados, como casos de prueba.
 - [ ] Migraciones: `inbound_emails`, `allowed_senders`, `merchant_rules`.
 - [ ] Configurar el servicio de correo entrante y la dirección del hogar.
 - [ ] Edge Function: recibir el correo, validar el remitente, extraer los datos con Claude y crear el gasto pendiente.
 - [ ] Detección de duplicados.
 - [ ] Bandeja de pendientes: confirmar, corregir y descartar.
 - [ ] Guardar reglas por comercio a partir de las correcciones.
-- [ ] Instrucciones para crear el filtro de reenvío en Gmail.
+- [ ] Probar el reenvío automático desde Outlook.com; si está bloqueado, implementar el plan B con Microsoft Graph.
+- [ ] Instrucciones para crear la regla de reenvío en Outlook.com.
 
 ### Fase 8: Conciliación de estados de cuenta
 - [ ] Migraciones: `statements`, `statement_lines` y bucket de Storage con acceso por hogar.
@@ -262,7 +266,5 @@ Pantallas del asistente (fases 7 a 9):
 - Tasa por defecto para convertir: compra, venta o promedio.
 - Vercel o Netlify para el hosting.
 - Categorías y subcategorías por defecto del hogar. Se pueden tomar de las que ya se usan en HomeBudget.
-- Cómo llegan los correos: reenvío automático a una dirección propia (recomendado para empezar) o lectura del buzón con la API de Gmail.
-- Servicio de correo entrante: Postmark, Mailgun o Cloudflare Email Routing (este último requiere un dominio propio en Cloudflare).
+- Confirmar que Outlook.com permite el reenvío automático a la dirección de Postmark; si no, usar Microsoft Graph.
 - Cuándo activar la confirmación automática de gastos del correo, en lugar de la bandeja de pendientes.
-- Qué bancos y tarjetas cubrir primero (según los comprobantes que llegan hoy).
