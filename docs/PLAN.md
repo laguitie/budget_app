@@ -113,10 +113,10 @@ Primera versión con lo indispensable para el uso diario:
 ## 9. Fases e issues
 
 ### Fase 0: Fundaciones
-- [ ] Crear el proyecto React + TypeScript + Vite en `/app`.
-- [ ] Configurar ESLint, Prettier y Vitest.
+- [x] Crear el proyecto React + TypeScript + Vite en `/app`.
+- [x] Configurar ESLint, Prettier y Vitest.
 - [ ] Crear el proyecto en Supabase y conectar el CLI al repo.
-- [ ] Configurar GitHub Actions (lint, pruebas, build).
+- [x] Configurar GitHub Actions (lint, pruebas, build).
 - [ ] Conectar el repo a Vercel/Netlify.
 
 ### Fase 1: Usuarios y hogares
