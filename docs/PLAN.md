@@ -140,6 +140,8 @@ Primera versión con lo indispensable para el uso diario:
 
 ## 8. Modelo de datos
 
+Las columnas en la base de datos usan nombres en inglés (`name`, `base_currency`, `rate_preference`, `display_name`...); esta tabla describe los campos en español.
+
 | Tabla | Campos principales |
 |---|---|
 | `households` | id, nombre, moneda_base (CRC), tasa_preferida (compra/venta/promedio) |
@@ -192,10 +194,12 @@ Pantallas del asistente (fases 7 a 9):
 - [x] Conectar el repo a Vercel (https://budgetapp-app.vercel.app).
 
 ### Fase 1: Usuarios y hogares
-- [ ] Migración: `households`, `household_members`, `invitations` con RLS.
-- [ ] Registro e inicio de sesión.
-- [ ] Crear hogar al registrarse.
-- [ ] Invitar miembros por correo y aceptar invitación.
+- [x] Migración: `households`, `household_members`, `invitations` con RLS.
+- [x] Registro e inicio de sesión (correo y contraseña).
+- [x] Crear hogar al registrarse.
+- [x] Invitar miembros y aceptar invitación (por enlace que el administrador comparte).
+- [ ] Enviar la invitación por correo desde la app (requiere SMTP propio).
+- [ ] Recuperar contraseña (requiere SMTP propio).
 
 ### Fase 2: Tipo de cambio
 - [ ] Registro en el servicio web del BCCR.
@@ -266,4 +270,5 @@ Pantallas del asistente (fases 7 a 9):
 - Tasa por defecto para convertir: compra, venta o promedio.
 - Categorías y subcategorías por defecto del hogar. Se pueden tomar de las que ya se usan en HomeBudget.
 - Confirmar que Outlook.com permite el reenvío automático a la dirección de Postmark; si no, usar Microsoft Graph.
+- Servicio SMTP propio (por ejemplo, Gmail con contraseña de aplicación) para enviar invitaciones y recuperar contraseña. Mientras no exista, la confirmación de correo al registrarse está desactivada, porque el correo incluido en Supabase solo llega a los miembros del equipo del proyecto.
 - Cuándo activar la confirmación automática de gastos del correo, en lugar de la bandeja de pendientes.

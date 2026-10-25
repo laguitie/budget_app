@@ -1,11 +1,44 @@
 import { render, screen } from '@testing-library/react'
-import App from './App'
+import { MemoryRouter } from 'react-router'
+import { AppRoutes } from './App'
+import { AuthProvider } from './auth/AuthProvider'
+import { HouseholdProvider } from './household/HouseholdProvider'
 
-describe('App', () => {
-  it('muestra el título de la aplicación', () => {
-    render(<App />)
+vi.mock('./lib/supabase', () => ({
+  supabase: {
+    auth: {
+      getSession: () => Promise.resolve({ data: { session: null } }),
+      onAuthStateChange: () => ({
+        data: { subscription: { unsubscribe: () => {} } },
+      }),
+    },
+  },
+}))
+
+function renderAt(path: string) {
+  render(
+    <MemoryRouter initialEntries={[path]}>
+      <AuthProvider>
+        <HouseholdProvider>
+          <AppRoutes />
+        </HouseholdProvider>
+      </AuthProvider>
+    </MemoryRouter>,
+  )
+}
+
+describe('App sin sesión', () => {
+  it('envía al inicio de sesión', async () => {
+    renderAt('/')
     expect(
-      screen.getByRole('heading', { name: 'Budget App' }),
+      await screen.findByRole('heading', { name: 'Ingresar' }),
+    ).toBeInTheDocument()
+  })
+
+  it('muestra el registro', async () => {
+    renderAt('/registro')
+    expect(
+      await screen.findByRole('heading', { name: 'Crear cuenta' }),
     ).toBeInTheDocument()
   })
 })
