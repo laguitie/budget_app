@@ -77,10 +77,10 @@ Primera versión con lo indispensable para el uso diario:
 
 ### Fuente del tipo de cambio
 
-- **Principal:** servicio web de Indicadores Económicos del BCCR (requiere registro con correo y token). Indicadores: 317 (compra) y 318 (venta).
-- **Respaldo:** API del Ministerio de Hacienda o Frankfurter (proveedor BCCR).
-- El BCCR rechaza llamadas desde el navegador (CORS), así que la consulta corre en una **Supabase Edge Function programada** una vez al día y guarda el resultado en la tabla `exchange_rates`.
-- Fines de semana y feriados: se usa el último tipo de cambio publicado.
+- **Principal:** API del SDDE del BCCR (`https://apim.bccr.fi.cr/SDDE/api/Bccr.GE.SDDE.Publico.Indicadores.API/indicadoresEconomicos/{código}/series`), con un Bearer token generado en "Mi perfil" del sitio de Indicadores Económicos. Indicadores: 317 (compra) y 318 (venta). El servicio SOAP anterior (`wsindicadoreseconomicos.asmx`) ya no responde. Guía: `Estandar_API_SDDE.pdf` del BCCR.
+- **Respaldo:** API del Ministerio de Hacienda (`https://api.hacienda.go.cr/indicadores/tc/dolar`), solo con el tipo de cambio del día.
+- El BCCR rechaza llamadas desde el navegador (CORS), así que la consulta corre en la **Edge Function `exchange-rates`**, que pg_cron llama cada 6 horas. Cada ejecución guarda los últimos 10 días y el de mañana (el BCCR lo publica la tarde anterior) en la tabla `exchange_rates`.
+- El BCCR publica valores también para fines de semana. Si falta un día (feriado o falla), `exchange_rate_on(fecha)` devuelve el último publicado.
 - La tasa usada para convertir (compra, venta o promedio) es una configuración del hogar.
 
 ## 6. Cuentas, transferencias y categorías
@@ -202,11 +202,11 @@ Pantallas del asistente (fases 7 a 9):
 - [ ] Recuperar contraseña (requiere SMTP propio).
 
 ### Fase 2: Tipo de cambio
-- [ ] Registro en el servicio web del BCCR.
-- [ ] Migración: `exchange_rates`.
-- [ ] Edge Function que consulta BCCR (con respaldo) y guarda el valor del día.
-- [ ] Programar la función diaria.
-- [ ] Función para obtener el tipo de cambio de una fecha (con el último disponible como fallback).
+- [x] Registro en el servicio web del BCCR.
+- [x] Migración: `exchange_rates`.
+- [x] Edge Function que consulta BCCR (con respaldo) y guarda el valor del día.
+- [x] Programar la función (cada 6 horas con pg_cron).
+- [x] Función para obtener el tipo de cambio de una fecha (con el último disponible como fallback).
 
 ### Fase 3: Cuentas y categorías
 - [ ] Migración: `accounts` y `categories` (con `parent_id`) con RLS.
