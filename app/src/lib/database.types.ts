@@ -39,6 +39,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      exchange_rates: {
+        Row: {
+          buy: number
+          date: string
+          fetched_at: string
+          sell: number
+          source: string
+        }
+        Insert: {
+          buy: number
+          date: string
+          fetched_at?: string
+          sell: number
+          source: string
+        }
+        Update: {
+          buy?: number
+          date?: string
+          fetched_at?: string
+          sell?: number
+          source?: string
+        }
+        Relationships: []
+      }
       household_members: {
         Row: {
           display_name: string
@@ -161,6 +185,22 @@ export type Database = {
       create_invitation: {
         Args: { p_email: string; p_household_id: string }
         Returns: string
+      }
+      exchange_rate_on: {
+        Args: { p_date?: string }
+        Returns: {
+          buy: number
+          date: string
+          fetched_at: string
+          sell: number
+          source: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "exchange_rates"
+          isOneToOne: true
+          isSetofReturn: false
+        }
       }
       get_invitation: {
         Args: { p_token: string }

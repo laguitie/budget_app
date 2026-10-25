@@ -31,6 +31,10 @@ La app lee `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` de `app/.env.lo
 - `npx supabase db push`: aplica las migraciones pendientes al proyecto remoto.
 - `npx supabase gen types typescript --linked > app/src/lib/database.types.ts`: regenera los tipos después de cada migración (archivo generado, no se edita a mano).
 - Las pruebas de seguridad de la base (`app/src/test/db/`) aplican todas las migraciones en un Postgres en memoria (PGlite) y corren con `npm test`. Cada tabla nueva lleva pruebas de que otro hogar no puede leerla ni modificarla.
+- Edge Functions en `supabase/functions/<nombre>/`. Publicar con `npx supabase functions deploy <nombre> --use-api` (sin Docker). La lógica pura va en un módulo aparte (ej. `rates.ts`) sin APIs de Deno, para probarla con Vitest desde `app/src/test/`.
+- Secretos de las funciones: `npx supabase secrets set --env-file <archivo>`. Localmente viven en `supabase/functions/.env` (ignorado por git); nunca se imprimen en la terminal.
+- `exchange-rates`: la llama pg_cron cada 6 horas con el encabezado `x-cron-secret` (secreto `EXCHANGE_RATES_CRON_SECRET` de la función y `exchange_rates_cron_secret` en Vault). Secreto `BCCR_TOKEN`: token del API SDDE del BCCR.
+- Las migraciones que usan extensiones de Supabase (pg_cron, pg_net, Vault) deben omitirse cuando no existan, para que las pruebas con PGlite sigan corriendo.
 - No hay Docker en este entorno, así que no se usa `supabase start`; las migraciones se prueban contra el proyecto remoto. Revisa bien cada migración antes de aplicarla.
 
 ## Reglas del dominio
