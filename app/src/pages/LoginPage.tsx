@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router'
 import { useAuth } from '../auth/AuthContext'
+import { PasswordInput } from '../components/PasswordInput'
 import { errorMessage } from '../lib/errors'
 import { safeRedirect } from '../lib/redirect'
 import { supabase } from '../lib/supabase'
@@ -21,7 +22,7 @@ export function LoginPage() {
     setSubmitting(true)
     setError(null)
     const { error } = await supabase.auth.signInWithPassword({
-      email: email.trim(),
+      email: email.trim().toLowerCase(),
       password,
     })
     if (error) setError(errorMessage(error))
@@ -46,8 +47,7 @@ export function LoginPage() {
         </label>
         <label>
           Contraseña
-          <input
-            type="password"
+          <PasswordInput
             autoComplete="current-password"
             required
             value={password}

@@ -223,3 +223,21 @@ a {
   align-items: center;
   flex-wrap: wrap;
 }
+
+.password-input {
+  position: relative;
+  display: flex;
+}
+
+.password-input input {
+  flex: 1;
+  padding-right: 5rem;
+}
+
+.password-input button {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.875rem;
+}
