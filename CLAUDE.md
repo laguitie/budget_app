@@ -26,6 +26,7 @@ La app lee `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` de `app/.env.lo
 ## Supabase (desde la raíz del repo)
 
 - Proyecto: `jycidmxkgwrfjtlixxkb`. El CLI se usa con `npx supabase`.
+- Producción: https://budgetapp-app.vercel.app (Vercel publica cada push a `main`; la raíz del proyecto en Vercel es `app/`). Es el Site URL del login de Supabase; `localhost:5173` está en las URLs de redirección permitidas.
 - `npx supabase migration new <nombre>`: crea una migración en `supabase/migrations/`.
 - `npx supabase db push`: aplica las migraciones pendientes al proyecto remoto.
 - `npx supabase gen types typescript --linked > app/src/lib/database.types.ts`: regenera los tipos después de cada migración.

@@ -58,7 +58,7 @@ Primera versión con lo indispensable para el uso diario:
 | Frontend | React + TypeScript + Vite, como PWA | Un solo código para web y móvil, sin tiendas de apps |
 | Backend | Supabase (Postgres, Auth, Realtime, Edge Functions) | Login, datos compartidos en tiempo real y reglas de acceso por hogar |
 | Seguridad de datos | Row Level Security (RLS) de Postgres | Cada hogar solo accede a sus registros |
-| Hosting | Vercel o Netlify, conectado a GitHub | Despliegue automático en cada push |
+| Hosting | Vercel, conectado a GitHub | Despliegue automático en cada push |
 | CI | GitHub Actions | Lint, pruebas y build en cada pull request |
 | IA | API de Claude (Anthropic), llamada desde Edge Functions | Extraer gastos de correos y PDFs, interpretar instrucciones en lenguaje natural |
 | Agentes externos | Servidor MCP (Model Context Protocol) | Que Claude u otros asistentes de IA consulten y registren movimientos |
@@ -187,9 +187,9 @@ Pantallas del asistente (fases 7 a 9):
 ### Fase 0: Fundaciones
 - [x] Crear el proyecto React + TypeScript + Vite en `/app`.
 - [x] Configurar ESLint, Prettier y Vitest.
-- [ ] Crear el proyecto en Supabase y conectar el CLI al repo.
+- [x] Crear el proyecto en Supabase y conectar el CLI al repo.
 - [x] Configurar GitHub Actions (lint, pruebas, build).
-- [ ] Conectar el repo a Vercel/Netlify.
+- [x] Conectar el repo a Vercel (https://budgetapp-app.vercel.app).
 
 ### Fase 1: Usuarios y hogares
 - [ ] Migración: `households`, `household_members`, `invitations` con RLS.
@@ -264,7 +264,6 @@ Pantallas del asistente (fases 7 a 9):
 ## 12. Decisiones pendientes
 
 - Tasa por defecto para convertir: compra, venta o promedio.
-- Vercel o Netlify para el hosting.
 - Categorías y subcategorías por defecto del hogar. Se pueden tomar de las que ya se usan en HomeBudget.
 - Confirmar que Outlook.com permite el reenvío automático a la dirección de Postmark; si no, usar Microsoft Graph.
 - Cuándo activar la confirmación automática de gastos del correo, en lugar de la bandeja de pendientes.
