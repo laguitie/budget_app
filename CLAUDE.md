@@ -19,6 +19,16 @@ El plan completo (alcance, modelo de datos, pantallas y fases) está en [docs/PL
 - `npm run format`: Prettier (`npm run format:check` solo verifica).
 - `npm test`: Vitest.
 
+La app lee `VITE_SUPABASE_URL` y `VITE_SUPABASE_PUBLISHABLE_KEY` de `app/.env.local` (plantilla en `app/.env.example`).
+
+## Supabase (desde la raíz del repo)
+
+- Proyecto: `jycidmxkgwrfjtlixxkb`. El CLI se usa con `npx supabase`.
+- `npx supabase migration new <nombre>`: crea una migración en `supabase/migrations/`.
+- `npx supabase db push`: aplica las migraciones pendientes al proyecto remoto.
+- `npx supabase gen types typescript --linked > app/src/lib/database.types.ts`: regenera los tipos después de cada migración.
+- No hay Docker en este entorno, así que no se usa `supabase start`; las migraciones se prueban contra el proyecto remoto. Revisa bien cada migración antes de aplicarla.
+
 ## Reglas del dominio
 
 - Los montos se guardan como enteros en céntimos, nunca como decimales.
